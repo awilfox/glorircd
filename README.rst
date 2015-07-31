@@ -50,6 +50,7 @@ For peer-to-peer chat systems, GlorIRCd is an IRC daemon that will scale well,
 be fault tolerant, and compliant with bleeding-edge standards.  Unlike other IRC
 daemons, GlorIRCd is designed to be easy to extend and maintain.  GlorIRCd is
 also designed to be highly fault tolerant for mission-critical chat systems.
+It is also designed to operate stand-alone, without an extra "services" package.
 
 
 Major features
@@ -60,6 +61,8 @@ Major features
 #. Standards-compliance with IRCv3.
 
 #. Fault tolerance via a different form of server linking.
+
+#. Nickname and channel registration is handled inside the daemon.
 
 
 
