@@ -30,7 +30,7 @@ new features of the protocol first will be a defining trait.  It will also
 enable the protocol details to be hashed out and made better, making a lasting
 impact on the larger Internet community.
 
-[1]: http://irvc3.net/
+[1]: http://ircv3.net/
 
 
 Objectives / success critera
