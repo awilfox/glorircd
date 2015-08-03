@@ -47,7 +47,7 @@ def find_root():
     if conf_exists_in_dir(prefix):
         return prefix
 
-    searched = ", ".join( (parent_dir, home_dir, prefix) )
+    searched = ", ".join((parent_dir, home_dir, prefix))
     raise ConfigError("No configuration file (searched {}).".format(searched))
 
 
