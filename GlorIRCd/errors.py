@@ -9,8 +9,14 @@ raises are caught correctly by the daemon.  Otherwise you will just core and
 everyone will hate you.  :)
 """
 
+
 class BaseError(Exception):
     """The base GlorIRCd exception.  DO NOT INHERIT FROM THIS."""
+    pass
+
+
+class ConfigError(BaseError):
+    """Raised when a configuration option is missing or invalid."""
     pass
 
 
