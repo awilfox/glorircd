@@ -5,9 +5,12 @@
 """The actual main entry point to GlorIRCd."""
 
 
+from GlorIRCd.config import ConfigurationHive
+
+
 class Server:
     def __init__(self):
-        pass
+        self.config_hive = ConfigurationHive()
 
     def serve(self):
         """Actually run the server."""

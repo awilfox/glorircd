@@ -104,11 +104,13 @@ class ConfigurationHive:
         """
 
         with open(file_path, 'r') as config_file:
-            parser = ConfigParser()
+            parser = ConfigParser(allow_no_value=True)
             parser.read_file(config_file)
             if not parser.has_section('server'):
                 raise ConfigError("Missing required section: server")
             self.server = dict(parser.items('server'))
-            self.modules = {sect: dict(parser.items(sect))
-                            for sect in parser.sections() if sect != 'server'}
+            self.modules = list(mod[0] for mod in parser.items('modules'))
+            self.mod_config = {sect: dict(parser.items(sect))
+                               for sect in parser.sections()
+                               if sect != 'server' and sect != 'modules'}
             self.loaded_from = file_path
