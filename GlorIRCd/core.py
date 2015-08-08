@@ -45,7 +45,8 @@ def bootstrap_load(server, modname):
         The module's name.  This can never return None.
     """
 
-    mod = import_module(modname, 'GlorIRCd.modules')
+    mod = __import__('GlorIRCd.modules.{}'.format(modname), globals(), locals(),
+                     [modname], 0)
     fqmn = "{category}/{name}".format(category=mod.M_CATEGORY, name=mod.M_NAME)
     if fqmn in server.modules:
         raise ModuleError("This module has already been loaded.")

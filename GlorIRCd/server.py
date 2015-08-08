@@ -5,7 +5,7 @@
 """The actual main entry point to GlorIRCd."""
 
 
-from logging import getLogger
+from logging import basicConfig, getLogger
 from taillight.signal import Signal
 
 from GlorIRCd.config import ConfigurationHive
@@ -14,11 +14,12 @@ from GlorIRCd.core import bootstrap_load
 
 class Server:
     def __init__(self):
+        basicConfig(level='DEBUG')
         self.config_hive = ConfigurationHive()
         self.modules = {}
         self.mod_inst = {}
         self.logger = getLogger(__name__)
-        #bootstrap_load(self, 'core.module')
+        bootstrap_load(self, 'core.module')
 
     def register_command_handler(self, cmd_or_numeric, handler):
         """Register a handler for a command or numeric.
