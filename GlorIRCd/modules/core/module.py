@@ -10,6 +10,7 @@ shouldn't unload this module unless you really know what you're doing.  ;)
 
 
 from logging import getLogger
+from taillight.signal import Signal
 
 
 class ModuleHandler:
@@ -28,16 +29,52 @@ class ModuleHandler:
             self.load_module(module)
 
     def load_module(self, modname):
+        """Load a module into GlorIRCd.
+
+        :param str modname:
+            The name of the module to load.
+
+        :returns:
+            The name of the module loaded, or None if no module was loaded.
+        """
+
         self.logger.debug("Discovering module '%s'...", modname)
-        # actually find it
-        # self.logger.debug("Loading module '%s/%s' with API version %s (%s)...",
-        #                   module.M_CATEGORY, module.M_NAME, module.M_VERSION,
-        #                   module.M_DESCRIPTION)
-        # load it
-        # self.server.modules[fqmn] = module
-        # self.server.mod_inst[fqmn] = module.M_CLASS(self.server)
-        # self.logger.debug("Loaded module '%s/%s.'. module.M_CATEGORY,
-        #                   module.M_NAME)
+
+        mod = None
+        try:
+            mod = __import__('GlorIRCd.modules.{}'.format(modname), globals(),
+                             locals(), [modname], 0)
+        except ImportError:
+            try:
+                mod = __import__('{}'.format(modname), globals(), locals(),
+                                 [modname], 0)
+            except ImportError:
+                pass
+
+        if mod is None:
+            self.logger.error("Module '%s' was not found.", modname)
+            return None
+
+        fqmn = '{category}/{name}'.format(category=mod.M_CATEGORY,
+                                          name=mod.M_NAME)
+        self.logger.debug("Loading module '%s' with API version %s (%s)...",
+                          fqmn, mod.M_VERSION, mod.M_DESCRIPTION)
+
+        if fqmn in self.server.modules:
+            self.logger.debug("Not loading already loaded module '%s'.", fqmn)
+            return None
+
+        if not all(Signal(('core/module', 'can_load')).call(fqmn)):
+            self.logger.debug("Module '%s' cannot be loaded due to server "
+                              "policy.", fqmn)
+            return None
+
+        self.server.modules[fqmn] = mod
+        self.server.mod_inst[fqmn] = mod.M_CLASS(self.server)
+
+        Signal(('core/module', 'loaded')).call(fqmn)
+
+        self.logger.debug("Loaded module '%s'.", fqmn)
 
     def load_from_irc(self, caller, line):
         pass

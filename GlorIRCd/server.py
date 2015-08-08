@@ -32,9 +32,13 @@ class Server:
             command or numeric is sent/received.
         """
 
-        self.logger.debug("Registering %r as handler for %s", handler,
-                          cmd_or_numeric)
-        Signal(cmd_or_numeric).add(handler)
+        if isinstance(cmd_or_numeric, str):
+            command = cmd_or_numeric.upper()
+        else:
+            command = str(cmd_or_numeric)
+
+        self.logger.debug("Registering %r as handler for %s", handler, command)
+        Signal(('command', command)).add(handler)
 
     def serve(self):
         """Actually run the server."""
