@@ -9,6 +9,9 @@ shouldn't unload this module unless you really know what you're doing.  ;)
 """
 
 
+from logging import getLogger
+
+
 class ModuleHandler:
     def __init__(self, server):
         self.server = server
@@ -18,9 +21,21 @@ class ModuleHandler:
                                              self.reload_from_irc)
         self.server.register_command_handler('modunload',
                                              self.unload_from_irc)
+        self.logger = getLogger(__name__)
+
+        # Load modules from the configuration hive.
+        for module in self.server.config_hive.modules:
+            self.load_module(module)
 
     def load_module(self, modname):
-        pass
+        self.logger.debug("Discovering module '%s'...", modname)
+        # actually find it
+        # self.logger.debug("Loading module '%s/%s' with API version %s (%s)...",
+        #                   module.M_CATEGORY, module.M_NAME, module.M_VERSION,
+        #                   module.M_DESCRIPTION)
+        # load it
+        # self.logger.debug("Loaded module '%s/%s.'. module.M_CATEGORY,
+        #                   module.M_NAME)
 
     def load_from_irc(self, caller, line):
         pass
