@@ -34,6 +34,8 @@ class ModuleHandler:
         #                   module.M_CATEGORY, module.M_NAME, module.M_VERSION,
         #                   module.M_DESCRIPTION)
         # load it
+        # self.server.modules[fqmn] = module
+        # self.server.mod_inst[fqmn] = module.M_CLASS(self.server)
         # self.logger.debug("Loaded module '%s/%s.'. module.M_CATEGORY,
         #                   module.M_NAME)
 
