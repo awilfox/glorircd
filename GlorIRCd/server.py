@@ -5,6 +5,9 @@
 """The actual main entry point to GlorIRCd."""
 
 
+from logging import getLogger
+from taillight.signal import Signal
+
 from GlorIRCd.config import ConfigurationHive
 from GlorIRCd.core import bootstrap_load
 
@@ -13,9 +16,11 @@ class Server:
     def __init__(self):
         self.config_hive = ConfigurationHive()
         self.modules = {}
-        bootstrap_load(self, 'core.module')
+        self.mod_inst = {}
+        self.logger = getLogger(__name__)
+        #bootstrap_load(self, 'core.module')
 
-    def register_command_handler(cmd_or_numeric, handler):
+    def register_command_handler(self, cmd_or_numeric, handler):
         """Register a handler for a command or numeric.
 
         :param cmd_or_numeric:
@@ -25,7 +30,10 @@ class Server:
             A callable that will receive notifications when the specified
             command or numeric is sent/received.
         """
-        print("Adding handler {} for {}".format(handler, cmd_or_numeric))
+
+        self.logger.debug("Registering %r as handler for %s", handler,
+                          cmd_or_numeric)
+        Signal(cmd_or_numeric).add(handler)
 
     def serve(self):
         """Actually run the server."""
