@@ -4,7 +4,7 @@
 
 """Contains the core exceptions for the GlorIRCd daemon.
 
-Note that you must derive from PluginError in this class to ensure that any
+Note that you must derive from ModuleError in this class to ensure that any
 raises are caught correctly by the daemon.  Otherwise you will just core and
 everyone will hate you.  :)
 """
@@ -20,8 +20,8 @@ class ConfigError(BaseError):
     pass
 
 
-class PluginError(BaseError):
-    """The base GlorIRCd exception class for plugin-defined exceptions.
+class ModuleError(BaseError):
+    """The base GlorIRCd exception class for module-defined exceptions.
 
     You should inherit from this.
     """

@@ -12,7 +12,24 @@ shouldn't unload this module unless you really know what you're doing.  ;)
 class ModuleHandler:
     def __init__(self, server):
         self.server = server
+        self.server.register_command_handler('modload',
+                                             self.load_from_irc)
+        self.server.register_command_handler('modreload',
+                                             self.reload_from_irc)
+        self.server.register_command_handler('modunload',
+                                             self.unload_from_irc)
 
+    def load_module(self, modname):
+        pass
+
+    def load_from_irc(self, caller, line):
+        pass
+
+    def reload_from_irc(self, caller, line):
+        pass
+
+    def unload_from_irc(self, caller, line):
+        pass
 
 M_NAME = 'module'
 M_CATEGORY = 'core'
