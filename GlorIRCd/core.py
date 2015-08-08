@@ -46,6 +46,8 @@ def bootstrap_load(server, modname):
     """
 
     mod = import_module(modname, 'GlorIRCd.modules')
-    if mod.M_NAME in server.modules:
+    fqmn = "{category}/{name}".format(category=mod.M_CATEGORY, name=mod.M_NAME)
+    if fqmn in server.modules:
         raise ModuleError("This module has already been loaded.")
-    server.modules[mod.M_NAME] = mod
+    server.modules[fqmn] = mod
+    server.mod_inst[fqmn] = mod.M_CLASS(server)
