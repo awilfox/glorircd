@@ -6,6 +6,7 @@
 
 from taillight.signal import Signal
 
+from GlorIRCd.errors import ConfigError, ModuleError
 from GlorIRCd.modules.core.module import can_unload_signal
 
 
@@ -15,6 +16,12 @@ class AsyncioBackend:
 
     def __init__(self, server):
         self.server = server
+
+        if 'io/asyncio' not in self.server.config_hive.mod_config:
+            raise ConfigError('No asyncio configuration found.')
+
+        # deep copy, so that we can compare changes later.
+        self.config = dict(self.server.config_hive.mod_config['io/asyncio'])
 
         # Prevent the backend from being unloaded.
         can_unload_signal.add(lambda fqmn: False, listener='io/asyncio')

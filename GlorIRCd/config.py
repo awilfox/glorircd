@@ -8,6 +8,8 @@ Note that as the configuration has to be loaded before the module system can
 initialise, this is the only area of GlorIRCd that can never be modularised.
 So we have to detect configuration format changes on every configuration reload.
 This kind of sucks.
+
+config_hive.mod_config is a dict of {module name: {key:value}}.
 """
 
 
@@ -19,7 +21,7 @@ from taillight.signal import Signal
 from GlorIRCd.errors import ConfigError
 
 
-config_updated = Signal('Configuration Updated')
+config_updated = Signal('config/updated')
 """Signal called when the configuration hive is updated/reloaded."""
 
 
@@ -114,3 +116,4 @@ class ConfigurationHive:
                                for sect in parser.sections()
                                if sect != 'server' and sect != 'modules'}
             self.loaded_from = file_path
+            config_updated.call('master')
