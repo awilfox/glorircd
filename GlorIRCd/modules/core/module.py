@@ -13,6 +13,22 @@ from logging import getLogger
 from taillight.signal import Signal
 
 
+can_load_signal = Signal(('core/module', 'can_load'))
+"""The Signal fired to determine if a module can be loaded or not."""
+
+
+loaded_signal = Signal(('core/module', 'loaded'))
+"""The Signal fired when a new module has been loaded."""
+
+
+can_unload_signal = Signal(('core/module', 'can_unload'))
+"""The Signal fired to determine if a module can be unloaded or not."""
+
+
+unloaded_signal = Signal(('core/module', 'unloaded'))
+"""The Signal fired when a module has been unloaded."""
+
+
 class ModuleHandler:
     def __init__(self, server):
         self.server = server
@@ -40,6 +56,8 @@ class ModuleHandler:
 
         self.logger.debug("Discovering module '%s'...", modname)
 
+        modname.replace('/', '.')
+
         mod = None
         try:
             mod = __import__('GlorIRCd.modules.{}'.format(modname), globals(),
@@ -64,7 +82,7 @@ class ModuleHandler:
             self.logger.debug("Not loading already loaded module '%s'.", fqmn)
             return None
 
-        if not all(Signal(('core/module', 'can_load')).call(fqmn)):
+        if not all(can_load_signal.call(fqmn)):
             self.logger.debug("Module '%s' cannot be loaded due to server "
                               "policy.", fqmn)
             return None
@@ -72,15 +90,49 @@ class ModuleHandler:
         self.server.modules[fqmn] = mod
         self.server.mod_inst[fqmn] = mod.M_CLASS(self.server)
 
-        Signal(('core/module', 'loaded')).call(fqmn)
+        loaded_signal.call(fqmn)
 
         self.logger.debug("Loaded module '%s'.", fqmn)
+        return fqmn
 
     def load_from_irc(self, caller, line):
-        pass
+        """Load a module from a connected user.
+
+        :param caller:
+            The user that ran the command.
+
+        :param line:
+            The line of the command.
+
+        :line_format:
+            Expected parameters: [modname] or [category, name].
+        """
+
+        if caller.has_acl('server/loadmodule'):
+            if len(line.params) == 2:
+                return self.load_module("{}.{}".format(*line.params))
+            elif len(line.params) == 1:
+                return self.load_module(line.params[0])
+            else:
+                pass  # XXX handle Invalid Syntax
+        else:
+            pass  # XXX handle Not Permitted
 
     def reload_from_irc(self, caller, line):
-        pass
+        """Reload a module from a connected user.
+
+        :param caller:
+            The user that ran the command.
+
+        :param line:
+            The line of the command.
+
+        :line_format:
+            Expected parameters: [modname] or [category, name].
+        """
+
+        if self.unload_from_irc(caller, line):
+            self.load_from_irc(caller, line)
 
     def unload_from_irc(self, caller, line):
         pass
