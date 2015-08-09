@@ -38,7 +38,7 @@ class ModuleHandler:
                                              self.reload_from_irc)
         self.server.register_command_handler('modunload',
                                              self.unload_from_irc)
-        self.logger = getLogger(__name__)
+        self.logger = getLogger('core/module')
 
         # Load modules from the configuration hive.
         for module in self.server.config_hive.modules:

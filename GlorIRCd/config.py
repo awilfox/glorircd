@@ -81,10 +81,11 @@ class ConfigurationHive:
         config_path = root()
         glorircd_dir = os.path.join(config_path, 'etc', 'glorircd')
         if os.path.exists(glorircd_dir):
+            self.path = glorircd_dir
             self._load_config_from(os.path.join(glorircd_dir, 'glorircd.conf'))
         else:
-            self._load_config_from(os.path.join(config_path, 'etc',
-                                                'glorircd.conf'))
+            self.path = os.path.join(config_path, 'etc')
+            self._load_config_from(os.path.join(self.path, 'glorircd.conf'))
 
     def __repr__(self):
         return "ConfigurationHive(loaded_from={})".format(self.loaded_from)
