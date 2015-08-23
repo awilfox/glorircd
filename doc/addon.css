@@ -1,0 +1,21 @@
+@import url(http://fonts.googleapis.com/css?family=PT+Serif:400,700|Lato:400,700);
+
+h1,h2,h3,h4,h5,h6,th,.field-name { font-family: 'Lato', 'Arial', sans-serif; }
+
+h1 {
+	margin-top: 2em;
+	border-bottom: 1px solid #aaa;
+}
+h2 {
+	margin-top: 1.5em;
+	border-bottom: 1px solid #ddd;
+}
+h3 {
+	margin-top: 1.5em;
+	margin-bottom: 0;
+}
+
+body {
+	font-family: 'PT Serif', 'Times', serif;
+	margin: 2em;
+}
