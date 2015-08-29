@@ -65,7 +65,6 @@ class User:
         """Determine whether the user is authenticated or not."""
         return self._authenticated
 
-    @property
     def send(self, message):
         """Send a message to all of the user's connected sessions.
 
