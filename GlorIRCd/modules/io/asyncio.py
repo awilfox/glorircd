@@ -42,16 +42,18 @@ class AsyncioBackend:
         bind_addrs = self.config.get('bind', '::').split(',')
         if 'plain' in self.config:
             plain_ports = self.config['plain'].split(',')
+            self.server.add_taint('non-tls')
         else:
             plain_ports = []
 
-        if 'ssl' in self.config:
-            ssl_ports = self.config['ssl'].split(',')
+        if 'listen' in self.config:
+            ssl_ports = self.config['listen'].split(',')
 
             self.context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
             self.context.options |= ssl.OP_NO_SSLv2
             self.context.options |= ssl.OP_NO_SSLv3
             self.context.options |= ssl.OP_NO_TLSv1
+            self.context.options |= ssl.OP_NO_TLSv1_1
             self.context.set_ciphers(self.config.get('ssl_ciphers',
                                                     default_ciphers))
             def_path = os.path.join(self.server.config_hive.path,
@@ -84,5 +86,5 @@ M_NAME = 'asyncio'
 M_CATEGORY = 'io'
 M_DESCRIPTION = 'Provides the AsyncIO I/O backend.'
 M_VERSION = '1.0.0'
-M_REQUIRES = []
+M_REQUIRES = ('core/user',)
 M_CLASS = AsyncioBackend
