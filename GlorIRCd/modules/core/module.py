@@ -73,8 +73,15 @@ class ModuleHandler:
             self.logger.error("Module '%s' was not found.", modname)
             return None
 
+        expect_version = '1.0.0'
         fqmn = '{category}/{name}'.format(category=mod.M_CATEGORY,
                                           name=mod.M_NAME)
+        if mod.M_VERSION != expect_version:
+            self.logger.error("Module '%s' has an invalid version %s (only "
+                              "version %s modules are supported).", fqmn,
+                              mod.M_VERSION, expect_version)
+            return None
+
         self.logger.debug("Loading module '%s' with API version %s (%s)...",
                           fqmn, mod.M_VERSION, mod.M_DESCRIPTION)
 
